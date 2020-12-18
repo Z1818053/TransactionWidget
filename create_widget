@@ -1,0 +1,49 @@
+function createWidget(title, data) {
+    console.log("Title: "+title)
+    let w = new ListWidget()
+    w.backgroundColor = new Color("#00FF20")
+    //let image = w.addImage(img);
+    //image.centerAlignImage();
+    let titleTxt = w.addText(title)
+    titleTxt.textColor = Color.black()
+    titleTxt.font = Font.systemFont(14)
+
+   // Create Title
+    const titleStack = w.addStack()
+    titleStack.layoutHorizontally()
+    createTitleStack(titleStack, headers[0], 0)
+    createTitleStack(titleStack, headers[1], 50)
+    if (config.widgetFamily != "small") {
+        createTitleStack(titleStack, headers[2], 80)
+        createTitleStack(titleStack, headers[3], 80)
+        createTitleStack(titleStack, headers[4], 65)
+    }
+    w.addSpacer(95)
+    
+    
+  var i = 0
+  for (var transactions of transactions) {
+    // Stop creating content when maximum reached
+      if (i == 3) {
+        break
+      }
+       
+      //Create Stack
+      const stack = w.addStack()
+      stack.layoutHorizontally()
+      stack.centerAlignContent()
+      
+      // bank stack
+      createTextStack(stack, transactions[0], 250);
+      w.addSpacer(10);
+      createTextStack(stack, transactions[1], 250);
+      w.addSpacer(10);
+      createTextStack(stack, transactions[2], 250);
+      
+      widget.addSpacer(0)
+      i++
+    }
+      
+    
+    return w
+}//end of widget
