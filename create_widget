@@ -93,16 +93,8 @@ function createWidget(title, data) {
         createTitleStack(titleStack, headers[3], 80);
         createTitleStack(titleStack, headers[4], 65);
     }
-//     w.addSpacer(95)
-    
-    
-  var i = 0
-  for (var transactions of transactions) {
-    // Stop creating content when maximum reached
-      if (i == 3) {
-        break
-      }
-       
+    w.addSpacer(95)
+          
       //Create Stack
       const stack = w.addStack()
       stack.layoutHorizontally()
@@ -115,11 +107,6 @@ function createWidget(title, data) {
       w.addSpacer(10);
       createTextStack(stack, transactions[2], 250);
       
-      widget.addSpacer(0)
-      i++
-    }
-      
-    
     return w
 }//end of widget
 
