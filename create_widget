@@ -1,3 +1,78 @@
+const DEFAULT_FONT_SIZE = 12
+const TEXT_COLOR = Color.white()
+const BACKCOLOR1 = '2980B9'
+const BACKCOLOR2 = '013369';
+
+let fm = FileManager.iCloud();
+let dir = fm.documentsDirectory()
+let path = dir + "/Current.csv"
+
+//global variables from file 
+let headers = [];
+let transactions = []; 
+let transaction_length = 0;
+
+
+//call readfile to parse out data
+var contents = readFile(path);
+
+//get last 5 transactions for display 
+var displayed_data = last_three(transactions);
+//set up widget data
+let title = "TRANSACTIONS";
+
+
+let widget = createWidget(title, displayed_data);
+if (config.runsInWidget) {
+  // create and show widget
+  Script.setWidget(widget);
+  Script.complete();
+}
+else {
+  widget.presentSmall();
+}
+
+// console.log(headers);
+console.log(displayed_data);
+
+
+//function to read file and parse the data
+function readFile(path) {
+ if (fm.fileExists(path)) {
+   //read entire file as string
+   let file = fm.readString(path);
+    
+   //split file on newlines 
+   var res= file.split( /\r\n/);
+    
+   //take header string and split ot
+   var tempHeaders = res[0];
+   headers = tempHeaders.split(",");
+    
+   //remove headers from res
+   res.splice(0,1);
+    
+   //set transaction w/ rest of data
+   transactions = res;
+   transaction_length = transactions.length;
+  
+   //console.log(transaction_length);
+
+   return res;
+ }//end of if 
+ else { 
+      console.log("failed to find file")
+      return 0;
+ }//end of else 
+
+}//end of readFile
+
+function last_three(transactions) {
+  var displayed_trans = transactions.slice(Math.max(transactions.length - 3, 0))
+
+return displayed_trans;
+}//end of last_three
+  
 function createWidget(title, data) {
     console.log("Title: "+title)
     let w = new ListWidget()
@@ -14,11 +89,11 @@ function createWidget(title, data) {
     createTitleStack(titleStack, headers[0], 0)
     createTitleStack(titleStack, headers[1], 50)
     if (config.widgetFamily != "small") {
-        createTitleStack(titleStack, headers[2], 80)
-        createTitleStack(titleStack, headers[3], 80)
-        createTitleStack(titleStack, headers[4], 65)
+        createTitleStack(titleStack, headers[2], 80);
+        createTitleStack(titleStack, headers[3], 80);
+        createTitleStack(titleStack, headers[4], 65);
     }
-    w.addSpacer(95)
+//     w.addSpacer(95)
     
     
   var i = 0
@@ -47,3 +122,23 @@ function createWidget(title, data) {
     
     return w
 }//end of widget
+
+function createTextStack(stack, text, width) {
+  const tmpStack = stack.addStack()
+  tmpStack.size = new Size(width, 20)
+  const widgetText = tmpStack.addText(text)
+  widgetText.font = Font.systemFont(DEFAULT_FONT_SIZE)
+  widgetText.textColor = TEXT_COLOR
+  
+  return widgetText
+}
+
+function createTitleStack(stack, text, width) {
+  const tmpStack = stack.addStack()
+  tmpStack.size = new Size(width, 20)
+  const widgetTitle = tmpStack.addText(text)
+  widgetTitle.font = Font.boldSystemFont(DEFAULT_FONT_SIZE)
+  widgetTitle.textColor = TEXT_COLOR
+  
+  return widgetTitle
+} 
